@@ -1,0 +1,105 @@
+<template>
+    <form>
+      <input type="text" v-model="username" placeholder="Username"><br>
+      <input type="password" v-model="password" placeholder="Password"><br>
+      <button @click.prevent="Login(this.username, this.password)">Login</button>
+    </form>
+    <div :class="this.formSent ? 'success' : 'failure'">
+      <p>{{ this.showMessage }}</p>
+    </div>
+</template>
+
+<script>
+import api from '../api/api.js'
+/* eslint-disable */
+export default {
+  name: 'Login',
+  data() {
+    return {
+      username: "",
+      password: "",
+      formSent: false,
+      showMessage: ""
+    }
+  },
+  methods: {
+    async Login(username, password) {
+      if (username === "" || password === "") {
+        this.formSent = false
+        this.showMessage = "Fill all the fields"
+      } else {
+            try {
+            const response = await api({
+                method: 'post',
+                url: `/users/login`,
+                data: {
+                    "uname": username, 
+                    "password": password
+                }
+            })
+            if (response.data && response.data.accessToken !== " ") {
+              localStorage.setItem('user', JSON.stringify(response.data.uname));
+              localStorage.setItem('accessToken', JSON.stringify(response.data.accessToken));
+              localStorage.setItem('refreshToken', JSON.stringify(response.data.refreshToken));
+              localStorage.setItem('idUser', JSON.stringify(response.data.idUser));
+              this.$router.push("/main")
+              this.showMessage = "login successful"
+              this.formSent = true
+            } else {
+              this.formSent = false
+              this.showMessage = response.data.message
+            }
+          } catch (error) {
+          this.showMessage = error.response.data
+          this.formSent = false
+          }
+      }
+      setTimeout(() => {
+            this.showMessage = ""
+        }, 5000)
+    }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+  .success {
+    color: green;
+  }
+  .failure {
+    color: red;
+  }
+  form {
+    width: 100%;
+    /* font-family: 'Montserrat'; */
+  }
+  form *{
+    width: 70%;
+    box-sizing: border-box;
+    margin: 5px;
+    font-size: 18px;
+  }
+  form > div {
+    text-align: center;
+    padding-bottom: 50px;
+  }
+  button {
+    padding: 1em;
+    border-radius: 10px;
+    background-color: #FDCA3B;
+    border: 0;
+    color: black;
+    cursor: pointer;
+  }
+  button:hover {
+    opacity: 0.7;
+  }
+  input {
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid black;
+    /* font-family: 'Montserrat'; */
+    font-size: 16px;
+  }
+</style>
