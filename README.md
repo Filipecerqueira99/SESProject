@@ -1,5 +1,5 @@
-# SES/@FEUP 22/23
-This is a fork from gitlab@feup project made for security in software engineer. Really liked how this project turned out so decided to save it here. Big props to my friends who worked with me on this one. 
+# SES/@FEUP 22_23
+This is a fork from gitlab@feup (Faculdade de Engenharia da Universidade do Porto) project made for security in software engineer. Really liked how this project turned out so decided to save it here. Big props to my friends who worked with me on this one. 
 
 # Group03 - Secure File-Sharing Server
 
